@@ -1,6 +1,6 @@
 // Much of this code is directly copied from or inspired by https://github.com/CYBAI/vscode-yaml-key-viewer
 
-const FIND_KEY_REGEX = /^\s*[\-|\s]?([\w|\s|\~\(|\)]*):.*/;
+const EXTRACT_KEY_REGEX = /^\s*(\w*)\s*:/
 
 /**
  * Check if the line is empty string or only whitespace(s) or not
@@ -21,7 +21,7 @@ function isCommentLine(str: string): boolean {
  * Check if the line contains a key or not
  */
 function isKey(str: string): boolean {
-    return !!str.match(FIND_KEY_REGEX);
+    return !!str.match(/^.*:/);
 }
 
 /**
@@ -69,7 +69,7 @@ function parseYaml(selectedLineText: string, lines: string[]): string {
             const spaces = textIndentations(line);
 
             if (expectedLineSpace.length >= spaces.length) {
-                result[spaces] = line.replace(FIND_KEY_REGEX, '$1').trim();
+                result[spaces] = line.replace(EXTRACT_KEY_REGEX, '$1').trim();
             }
 
             return result;
